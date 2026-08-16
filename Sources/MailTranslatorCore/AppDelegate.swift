@@ -502,6 +502,13 @@ public final class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
     private func makeTranslator() -> Translating {
+        if settings.offlineOnly {
+            if #available(macOS 26.0, *) {
+                return AppleTranslator()
+            }
+            return PassThroughTranslator()
+        }
+
         if !settings.deepSeekAPIKey.isEmpty {
             return DeepSeekTranslator(
                 apiKey: settings.deepSeekAPIKey,

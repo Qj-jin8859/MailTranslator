@@ -27,6 +27,7 @@ final class AppSettings {
         static let showOriginal = "showOriginalText"
         static let deepSeekAPIKey = "deepSeekAPIKey"
         static let deepSeekModel = "deepSeekModel"
+        static let offlineOnly = "offlineOnly"
         static let hasCompletedOnboarding = "hasCompletedOnboarding"
         static let launchAtLoginEnabled = "launchAtLoginEnabled"
         static let syncTargetLanguage = "syncTargetLanguage"
@@ -55,6 +56,9 @@ final class AppSettings {
         }
         if defaults.object(forKey: Key.deepSeekModel) == nil {
             defaults.set("deepseek-chat", forKey: Key.deepSeekModel)
+        }
+        if defaults.object(forKey: Key.offlineOnly) == nil {
+            defaults.set(false, forKey: Key.offlineOnly)
         }
     }
 
@@ -94,6 +98,11 @@ final class AppSettings {
     var deepSeekModel: String {
         get { defaults.string(forKey: Key.deepSeekModel) ?? "deepseek-chat" }
         set { defaults.set(newValue, forKey: Key.deepSeekModel) }
+    }
+
+    var offlineOnly: Bool {
+        get { defaults.bool(forKey: Key.offlineOnly) }
+        set { defaults.set(newValue, forKey: Key.offlineOnly) }
     }
 
     var hasCompletedOnboarding: Bool {

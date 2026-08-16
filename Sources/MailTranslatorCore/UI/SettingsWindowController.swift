@@ -8,6 +8,7 @@ final class SettingsWindowController: NSWindowController {
     private var autoTranslateCheckbox: NSButton!
     private var showOriginalCheckbox: NSButton!
     private var syncTargetLanguageCheckbox: NSButton!
+    private var offlineOnlyCheckbox: NSButton!
     private var targetLanguagePopup: NSPopUpButton!
     private var deepSeekModelPopup: NSPopUpButton!
     private var pollingIntervalField: NSTextField!
@@ -17,7 +18,7 @@ final class SettingsWindowController: NSWindowController {
 
     init() {
         let window = NSWindow(
-            contentRect: NSRect(x: 0, y: 0, width: 680, height: 440),
+            contentRect: NSRect(x: 0, y: 0, width: 680, height: 480),
             styleMask: [.titled, .closable],
             backing: .buffered,
             defer: false
@@ -58,6 +59,12 @@ final class SettingsWindowController: NSWindowController {
             checkboxWithTitle: "与目标语言同步",
             target: self,
             action: #selector(syncTargetLanguageChanged)
+        )
+
+        offlineOnlyCheckbox = NSButton(
+            checkboxWithTitle: "仅离线翻译，不发送邮件到云端",
+            target: self,
+            action: #selector(offlineOnlyChanged)
         )
 
         targetLanguagePopup = NSPopUpButton()
@@ -114,6 +121,7 @@ final class SettingsWindowController: NSWindowController {
             [makeLabel("自动翻译"), autoTranslateCheckbox],
             [makeLabel("显示原文"), showOriginalCheckbox],
             [makeLabel("菜单同步"), syncTargetLanguageCheckbox],
+            [makeLabel("隐私模式"), offlineOnlyCheckbox],
             [makeLabel("目标语言"), targetLanguagePopup],
             [makeLabel("DeepSeek 模型"), deepSeekModelPopup],
             [makeLabel("轮询间隔（秒）"), pollingIntervalField],
@@ -146,6 +154,7 @@ final class SettingsWindowController: NSWindowController {
         autoTranslateCheckbox?.state = settings.autoTranslateEnabled ? .on : .off
         showOriginalCheckbox?.state = settings.showOriginalText ? .on : .off
         syncTargetLanguageCheckbox?.state = settings.syncTargetLanguage ? .on : .off
+        offlineOnlyCheckbox?.state = settings.offlineOnly ? .on : .off
 
         if let index = AppSettings.supportedTargetLanguages.firstIndex(where: {
             $0.code == settings.targetLanguage
@@ -183,6 +192,11 @@ final class SettingsWindowController: NSWindowController {
         if enabled {
             settings.autoTranslateLanguage = settings.targetLanguage
         }
+        onSettingsChanged?()
+    }
+
+    @objc private func offlineOnlyChanged(_ sender: NSButton) {
+        settings.offlineOnly = sender.state == .on
         onSettingsChanged?()
     }
 

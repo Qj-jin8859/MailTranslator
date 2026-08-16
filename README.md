@@ -2,6 +2,8 @@
 
 macOS 菜单栏小工具：自动识别 Mail.app 当前选中邮件的主要语言，如果与目标语言不一致，就自动翻译并弹出译文。
 
+> 🚧 当前阶段：Alpha / Proof of Concept，功能可用但仍在持续完善。
+
 ## 功能
 
 - 自动检测邮件语言，目标语言一致时跳过翻译
@@ -13,9 +15,17 @@ macOS 菜单栏小工具：自动识别 Mail.app 当前选中邮件的主要语�
 - 翻译缓存、开机自启、首次运行引导、诊断信息
 - 翻译结果浮窗显示来源，并提供复制和重试
 
+## Roadmap
+
+- `v0.1`：完成纯文本邮件自动检测与翻译
+- `v0.2`：完善 MIME/HTML 正文解析、引用与签名清理
+- `v0.3`：加入翻译缓存、DeepSeek AI 翻译、开机自启
+- `v0.4`：完善隐私模式、诊断信息、自测
+- 后续：快捷触发、回复内容智能识别、本地化
+
 ## 环境要求
 
-- macOS 26+
+- macOS 15+
 - Swift 6.3+
 - Xcode Command Line Tools 或完整 Xcode
 
@@ -48,6 +58,13 @@ open dist/MailTranslator.app
 ```bash
 defaults write local.codex.MailTranslator.settings deepSeekAPIKey -string "你的 DeepSeek API Key"
 ```
+
+## Privacy
+
+- Apple 翻译优先在本机处理，不会把邮件发送到 DeepSeek；
+- 配置 DeepSeek 后，邮件正文会发送到 DeepSeek API，仅用于本次翻译；
+- 可在偏好设置中开启“仅离线翻译”，彻底禁用云端翻译；
+- 本地翻译缓存保存在 `~/Library/Application Support/MailTranslator/`。
 
 ## 结构
 
